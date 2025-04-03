@@ -53,6 +53,18 @@ def create_todo(todo: TodoItem):
     save_todos(todos)
     return todo
 
+# To-Do 항목 삭제
+@app.delete("/todos/{todo_id}")
+def delete_todo(todo_id: int):
+    todos = load_todos()
+    filtered_todos = [todo for todo in todos if todo["id"] != todo_id]
+
+    if len(filtered_todos) == len(todos):
+        raise HTTPException(status_code=404, detail="To-Do not found")
+
+    save_todos(filtered_todos)
+    return {"message": "To-Do deleted successfully"}
+
 # HTML 파일 서빙
 @app.get("/", response_class=HTMLResponse)
 def read_root():

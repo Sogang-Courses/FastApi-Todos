@@ -13,7 +13,6 @@
         <div class="form-row horizontal-inputs">
           <input type="text" id="title" placeholder="Title" required />
           <input type="text" id="description" placeholder="Description" required />
-
           <label>
             <input type="checkbox" id="important" />
             Important
@@ -40,6 +39,12 @@
                 const li = document.createElement('li');
                 const isImportant = todo.important ? '✨ ' : '';
                 li.textContent = `${isImportant} ${todo.id}번째: ${todo.title} - ${todo.description} ${isImportant}`;
+
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'X';
+                deleteButton.classList.add('deleteButton');
+                deleteButton.onclick = () => deleteTodo(todo.id);
+                li.appendChild(deleteButton);
                 todoList.appendChild(li);
             });
         }
@@ -69,6 +74,16 @@
                 document.getElementById('important').checked = false;
             }
         });
+
+        async function deleteTodo(id) {
+            const response = await fetch(`/todos/${id}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                await fetchTodos();
+            }
+        }
     </script>
 </body>
 </html>

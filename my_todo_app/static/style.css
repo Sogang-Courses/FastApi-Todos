@@ -60,10 +60,20 @@
   button:hover {
     background-color: #d4b4ba;
   }
-  
+
   #todo-list {
     list-style: none;
     padding: 5px;
     width: 300px;
     margin: 0 auto;
   }
+
+  #todo-list button.deleteButton {
+    padding: 5px 10px;
+    font-size: 8px;
+    background-color: #FF6B6B;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
