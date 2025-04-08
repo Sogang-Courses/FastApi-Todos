@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <h1>To-Do List</h1>
+    <h1>💃🏻지원이의 투두리스트🕺🏻</h1>
     <ul id="todo-list"></ul>
     <form id="todo-form">
         <div class="form-row horizontal-inputs">
@@ -39,6 +39,12 @@
                 const li = document.createElement('li');
                 const isImportant = todo.important ? '✨ ' : '';
                 li.textContent = `${isImportant} ${todo.id}번째: ${todo.title} - ${todo.description} ${isImportant}`;
+
+                const completeButton = document.createElement('button');
+                completeButton.textContent = '✓';
+                completeButton.classList.add('completeButton');
+                completeButton.onclick = () => deleteTodo(todo.id);
+                li.appendChild(completeButton);
 
                 const deleteButton = document.createElement('button');
                 deleteButton.textContent = 'X';

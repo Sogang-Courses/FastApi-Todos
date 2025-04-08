@@ -68,6 +68,18 @@
     margin: 0 auto;
   }
 
+  #todo-list button.completeButton {
+    padding: 5px 10px;
+    font-size: 8px;
+    background-color: #6b77ff;
+    margin-right: 3px;
+    margin-left: 3px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
   #todo-list button.deleteButton {
     padding: 5px 10px;
     font-size: 8px;
