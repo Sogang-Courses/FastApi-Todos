@@ -22,15 +22,23 @@ def test_get_todos_empty():
     assert response.json() == []
 
 def test_get_todos_with_items():
-    todo = TodoItem(id=1, title="Test", description="Test description", completed=False)
-    save_todos([todo.dict()])
+    todo = TodoItem(id=1, 
+                    title="Test", 
+                    description="Test description", 
+                    completed=False, 
+                    important= False)
+    save_todos([todo.model_dump()])
     response = client.get("/todos")
     assert response.status_code == 200
     assert len(response.json()) == 1
     assert response.json()[0]["title"] == "Test"
 
 def test_create_todo():
-    todo = {"id": 1, "title": "Test", "description": "Test description", "completed": False}
+    todo = {"id": 1, 
+            "title": "Test", 
+            "description": "Test description", 
+            "completed": False, 
+            "important": False}
     response = client.post("/todos", json=todo)
     assert response.status_code == 200
     assert response.json()["title"] == "Test"
@@ -41,26 +49,43 @@ def test_create_todo_invalid():
     assert response.status_code == 422
 
 def test_update_todo():
-    todo = TodoItem(id=1, title="Test", description="Test description", completed=False)
-    save_todos([todo.dict()])
-    updated_todo = {"id": 1, "title": "Updated", "description": "Updated description", "completed": True}
+    todo = TodoItem(id=1, 
+                    title="Test", 
+                    description="Test description", 
+                    completed=False, 
+                    important=False)
+    save_todos([todo.model_dump()])
+    updated_todo = {"id": 1, 
+                    "title": "Updated", 
+                    "description": "Updated description",
+                    "completed": True,
+                    "important": False}
     response = client.put("/todos/1", json=updated_todo)
     assert response.status_code == 200
     assert response.json()["title"] == "Updated"
 
 def test_update_todo_not_found():
-    updated_todo = {"id": 1, "title": "Updated", "description": "Updated description", "completed": True}
+    updated_todo = {"id": 1, 
+                    "title": "Updated", 
+                    "description": "Updated description", 
+                    "completed": True, 
+                    "important": False}
     response = client.put("/todos/1", json=updated_todo)
     assert response.status_code == 404
+    assert response.json()["detail"] == "To-Do not found"
 
 def test_delete_todo():
-    todo = TodoItem(id=1, title="Test", description="Test description", completed=False)
-    save_todos([todo.dict()])
+    todo = TodoItem(id=1, 
+                    title="Test", 
+                    description="Test description", 
+                    completed=False, 
+                    important= False)
+    save_todos([todo.model_dump()])
     response = client.delete("/todos/1")
     assert response.status_code == 200
-    assert response.json()["message"] == "To-Do item deleted"
+    assert response.json()["detail"] == "To-Do item deleted"
     
 def test_delete_todo_not_found():
     response = client.delete("/todos/1")
-    assert response.status_code == 200
-    assert response.json()["message"] == "To-Do item deleted"
+    assert response.status_code == 404
+    assert response.json()["detail"] == "To-Do not found"
