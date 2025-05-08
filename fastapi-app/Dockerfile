@@ -5,13 +5,18 @@ FROM python:3.9
 WORKDIR /app
 
 # 필요한 파일 복사
-COPY . .
+COPY fastapi-app/requirements.txt .
 
 # 의존성 설치
-# RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Python 이 root 권한으로 실행되기 때문에 권한 제한을 위한 코드
+# 필요한 소스만 복사
+COPY fastapi-app/ ./fastapi-app/
+
+# non-root 사용자 생성
 RUN useradd -m appuser
+
+# 사용자 전환
 USER appuser
 
 # FastAPI 서버 실행
