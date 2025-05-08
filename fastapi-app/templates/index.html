@@ -8,6 +8,12 @@
 </head>
 <body>
     <h1>💃🏻지원이의 투두리스트🕺🏻</h1>
+
+    <div>
+        <button id="spin-button">🎡 룰렛 돌리기</button>
+        <p id="spin-result"></p>
+    </div>
+
     <ul id="todo-list"></ul>
     <form id="todo-form">
         <div class="form-row horizontal-inputs">
@@ -90,6 +96,15 @@
                 await fetchTodos();
             }
         }
+
+        /* 룰렛 기능 */
+        const rouletteItems = ['밥 먹기', '운동하기', '책 읽기', '영화 보기', '잠자기'];
+
+        document.getElementById('spin-button').addEventListener('click', () => {
+            const randomIndex = Math.floor(Math.random() * rouletteItems.length);
+            const result = rouletteItems[randomIndex];
+            document.getElementById('spin-result').textContent = `🎉 오늘의 추천: ${result}!`;
+        });
     </script>
 </body>
 </html>
