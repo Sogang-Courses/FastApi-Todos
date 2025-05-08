@@ -8,3 +8,23 @@ services:
     container_name: FastApi-app
     ports:
       - "5001:5001"
+  
+  # 6주차 과제
+  sonarqube:
+    image: sonarqube:latest
+    container_name: sonarqube
+    ports:
+      - "9000:9000"
+    environment:
+      - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true  # 메모리 제한 환경에서 유용한 옵션
+    volumes:
+      - sonarqube_conf:/opt/sonarqube/conf
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_logs:/opt/sonarqube/logs
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      
+volumes:
+  sonarqube_conf:
+  sonarqube_data:
+  sonarqube_logs:
+  sonarqube_extensions:
