@@ -5,13 +5,13 @@ FROM python:3.9
 WORKDIR /app
 
 # 필요한 파일 복사
-COPY fastapi-app/requirements.txt .
+COPY requirements.txt .
 
 # 의존성 설치
 RUN pip install --no-cache-dir -r requirements.txt
 
 # 필요한 소스만 복사
-COPY fastapi-app/ ./fastapi-app/
+COPY . .
 
 # non-root 사용자 생성
 RUN useradd -m appuser
