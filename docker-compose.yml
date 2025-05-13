@@ -22,9 +22,37 @@ services:
       - sonarqube_data:/opt/sonarqube/data
       - sonarqube_logs:/opt/sonarqube/logs
       - sonarqube_extensions:/opt/sonarqube/extensions
-      
+
+  # 7주차 과제
+  prometheus:
+      image: prom/prometheus:latest
+      container_name: prometheus
+      volumes:
+        - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      ports:
+        - "9090:9090"
+      command:
+        - "--config.file=/etc/prometheus/prometheus.yml"
+
+  grafana:
+      image: grafana/grafana:latest
+      container_name: grafana
+      ports:
+        - "3000:3000"
+      environment:
+        - GF_SECURITY_ADMIN_PASSWORD=admin  # 기본 Grafana 로그인 비밀번호
+      volumes:
+        - grafana-data:/var/lib/grafana
+
+  node-exporter:
+      image: prom/node-exporter:latest
+      container_name: node-exporter
+      ports:
+        - "9100:9100"
+
 volumes:
   sonarqube_conf:
   sonarqube_data:
   sonarqube_logs:
   sonarqube_extensions:
+  grafana-data:

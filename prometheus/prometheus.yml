@@ -1,0 +1,13 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  # Flask 애플리케이션의 메트릭 수집
+  - job_name: 'fastapi'
+    static_configs:
+      - targets: ['fastapi-app:5001']  # Docker for Mac/Windows인 경우; 리눅스에서는 'localhost:5000' 또는 컨테이너 네트워크 이름 사용
+
+  # 시스템 메트릭 수집 (node-exporter)
+  - job_name: 'node'
+    static_configs:
+      - targets: ['node-exporter:9100']

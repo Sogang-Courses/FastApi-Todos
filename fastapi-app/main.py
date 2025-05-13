@@ -6,7 +6,12 @@ from pathlib import Path
 import json
 import os
 
+from prometheus_fastapi_instrumentator import Instrumentator
+
 app = FastAPI()
+
+# Prometheus 메트릭스 엔드포인트 (/metrics)
+Instrumentator().instrument(app).expose(app, endpoint="/metrics")
 
 # 폰트적용을 위한 정적 파일
 if os.path.isdir("static"):
