@@ -14,4 +14,4 @@ scrape_configs:
 
   - job_name: 'cadvisor'
     static_configs:
-      - targets: ['localhost:8080']  # 또는 도커 네트워크에서는 'cadvisor:8080'
+      - targets: ['cadvisor:8080']  # 또는 도커 네트워크에서는 'cadvisor:8080'
