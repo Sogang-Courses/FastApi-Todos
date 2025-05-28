@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>To-Do List</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/style.css" />
 </head>
+
 <body>
     <h1>💃🏻지원이의 투두리스트🕺🏻</h1>
 
@@ -17,25 +19,29 @@
     <ul id="todo-list"></ul>
     <form id="todo-form">
         <div class="form-row horizontal-inputs">
-          <input type="text" id="title" placeholder="Title" required />
-          <input type="text" id="description" placeholder="Description" required />
-          <label>
-            <input type="checkbox" id="important" />
-            Important
-          </label>
+            <input type="text" id="title" placeholder="Title" required />
+            <input type="text" id="description" placeholder="Description" required />
+            <label>
+                <input type="checkbox" id="important" />
+                Important
+            </label>
         </div>
-    
         <div class="form-row">
-          <button type="submit">Add To-Do</button>
+            <button type="submit">Add To-Do</button>
         </div>
-      </form>
+    </form>
+
+    <h2>✅ 완료한 기록</h2>
+    <ul id="completed-list"></ul>
+
     <script>
-        /* 처음 todo 리스트 호출 */
+        // 처음 todo 및 기록 표시
         document.addEventListener("DOMContentLoaded", async () => {
             await fetchTodos();
+            renderCompletedTodos();
         });
 
-        /* todo 리스트 */
+        // todo 목록 렌더링
         async function fetchTodos() {
             const response = await fetch('/todos');
             const todos = await response.json();
@@ -44,7 +50,7 @@
             todos.forEach(todo => {
                 const li = document.createElement('li');
                 const isImportant = todo.important ? '✨ ' : '';
-                li.textContent = `${isImportant} ${todo.id}번째: ${todo.title} - ${todo.description} ${isImportant}`;
+                li.textContent = `${isImportant}${todo.id}번째: ${todo.title} - ${todo.description} ${isImportant}`;
 
                 const completeButton = document.createElement('button');
                 completeButton.textContent = '✓';
@@ -57,11 +63,12 @@
                 deleteButton.classList.add('deleteButton');
                 deleteButton.onclick = () => deleteTodo(todo.id);
                 li.appendChild(deleteButton);
+
                 todoList.appendChild(li);
             });
         }
 
-        /* todo 추가 */
+        // todo 추가
         document.getElementById('todo-form').addEventListener('submit', async (event) => {
             event.preventDefault();
             const title = document.getElementById('title').value;
@@ -73,33 +80,71 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ id: Date.now(), 
-                    title, 
-                    description, 
+                body: JSON.stringify({
+                    id: Date.now(),
+                    title,
+                    description,
                     completed: false,
-                    important})
+                    important
+                })
             });
+
             if (response.ok) {
                 await fetchTodos();
-                document.getElementById('title').value = ''; 
+                document.getElementById('title').value = '';
                 document.getElementById('description').value = '';
                 document.getElementById('important').checked = false;
             }
         });
 
+        // todo 삭제 및 완료 처리
         async function deleteTodo(id) {
+            const todoItem = await getTodoById(id);
+            if (todoItem) saveCompletedTodo(todoItem);
+
             const response = await fetch(`/todos/${id}`, {
                 method: 'DELETE'
             });
 
             if (response.ok) {
                 await fetchTodos();
+                renderCompletedTodos();
             }
         }
 
-        /* 룰렛 기능 */
-        const rouletteItems = ['밥 먹기', '운동하기', '책 읽기', '영화 보기', '잠자기'];
+        // 특정 todo 가져오기
+        async function getTodoById(id) {
+            const response = await fetch('/todos');
+            const todos = await response.json();
+            return todos.find(todo => todo.id === id);
+        }
 
+        // 완료한 todo를 localStorage에 저장
+        function saveCompletedTodo(todo) {
+            let history = JSON.parse(localStorage.getItem('completedTodos')) || [];
+            history.push({
+                ...todo,
+                completedAt: new Date().toLocaleString()
+            });
+            localStorage.setItem('completedTodos', JSON.stringify(history));
+        }
+
+        // 완료한 todo 렌더링
+        function renderCompletedTodos() {
+            const completedList = document.getElementById('completed-list');
+            completedList.innerHTML = '';
+            const history = JSON.parse(localStorage.getItem('completedTodos')) || [];
+
+            history.forEach(todo => {
+                const li = document.createElement('li');
+                const isImportant = todo.important ? '✨ ' : '';
+                li.textContent = `${isImportant}${todo.title} - ${todo.description} (완료: ${todo.completedAt})`;
+                completedList.appendChild(li);
+            });
+        }
+
+        // 룰렛 기능
+        const rouletteItems = ['밥 먹기', '운동하기', '책 읽기', '영화 보기', '잠자기'];
         document.getElementById('spin-button').addEventListener('click', () => {
             const randomIndex = Math.floor(Math.random() * rouletteItems.length);
             const result = rouletteItems[randomIndex];
@@ -107,4 +152,5 @@
         });
     </script>
 </body>
+
 </html>
