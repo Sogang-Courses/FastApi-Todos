@@ -9,7 +9,7 @@
         <collectionProp name="Arguments.arguments">
           <elementProp name="BASE_URL" elementType="Argument">
             <stringProp name="Argument.name">BASE_URL</stringProp>
-            <stringProp name="Argument.value">http://3.34.148.200:8000</stringProp>
+            <stringProp name="Argument.value">http://3.35.189.208:8003</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
@@ -21,8 +21,8 @@
         <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
           <collectionProp name="Arguments.arguments"/>
         </elementProp>
-        <stringProp name="HTTPSampler.domain">${__P(DOMAIN,localhost)}</stringProp>
-        <stringProp name="HTTPSampler.port">${__P(PORT,8000)}</stringProp>
+        <stringProp name="HTTPSampler.domain">${__BeanShell(${BASE_URL}.split("://")[1].split(":")[0])}</stringProp>
+        <stringProp name="HTTPSampler.port">${__BeanShell(${BASE_URL}.split(":")[2])}</stringProp>
         <stringProp name="HTTPSampler.protocol">http</stringProp>
         <stringProp name="HTTPSampler.path"></stringProp>
         <stringProp name="HTTPSampler.contentEncoding"></stringProp>
@@ -67,6 +67,7 @@
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">{"name": "Test User", "email": "test@example.com"}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <stringProp name="HTTPArgument.name"></stringProp>
               </elementProp>
             </collectionProp>
           </elementProp>
