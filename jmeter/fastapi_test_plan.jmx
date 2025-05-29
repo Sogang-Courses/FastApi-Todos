@@ -65,9 +65,9 @@
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
-          <stringProp name="HTTPSampler.domain">${__BeanShell(${BASE_URL}.split("://")[1].split(":")[0])}</stringProp>
-          <stringProp name="HTTPSampler.port">${__BeanShell(${BASE_URL}.split(":")[2])}</stringProp>
-          <stringProp name="HTTPSampler.protocol">${__BeanShell(${BASE_URL}.split("://")[0])}</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
+          <stringProp name="HTTPSampler.domain">3.35.189.208</stringProp>
+          <stringProp name="HTTPSampler.port">8003</stringProp>
           <stringProp name="HTTPSampler.path">/todos</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
