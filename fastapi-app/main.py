@@ -57,7 +57,7 @@ def create_todo(todo: TodoItem):
 
     todos.append(new_todo)
     save_todos(todos)
-    return TodoItem(**new_todo)
+    return todo
 
 # PUT /todos/{id}
 @app.put("/todos/{todo_id}", response_model=TodoItem)
