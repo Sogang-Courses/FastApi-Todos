@@ -88,12 +88,15 @@ services:
     container_name: influxdb
     ports:
       - "8086:8086"
+      - "2003:2003"
     environment:
       - INFLUXDB_DB=jmeter
       - INFLUXDB_ADMIN_USER=admin
       - INFLUXDB_ADMIN_PASSWORD=admin123
     volumes:
       - influxdb_data:/var/lib/influxdb
+      - ./influxdb.conf:/etc/influxdb/influxdb.conf:ro
+    command: influxd -config /etc/influxdb/influxdb.conf
     networks:
       - loadtest-net
 

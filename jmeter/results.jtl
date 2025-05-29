@@ -1,0 +1,2 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1748518226170,49,GET /todos,200,OK,Users 1-1,text,true,,480,157,1,1,http://3.35.189.208:8003/todos,47,0,29
