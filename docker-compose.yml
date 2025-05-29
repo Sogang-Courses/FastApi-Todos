@@ -60,6 +60,7 @@ services:
       networks:
       - loadtest-net
 
+  # 12주차 과제
   jmeter:
     build:
       context: ./jmeter
@@ -81,6 +82,20 @@ services:
       - /jmeter/report
     networks:
       - loadtest-net
+  
+  influxdb:
+    image: influxdb:1.8
+    container_name: influxdb
+    ports:
+      - "8086:8086"
+    environment:
+      - INFLUXDB_DB=jmeter
+      - INFLUXDB_ADMIN_USER=admin
+      - INFLUXDB_ADMIN_PASSWORD=admin123
+    volumes:
+      - influxdb_data:/var/lib/influxdb
+    networks:
+      - loadtest-net
 
 networks:
   loadtest-net:
@@ -92,3 +107,4 @@ volumes:
   sonarqube_logs:
   sonarqube_extensions:
   grafana-data:
+  influxdb_data:
