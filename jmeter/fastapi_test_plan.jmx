@@ -79,7 +79,7 @@
             <collectionProp name="Arguments.arguments">
               <elementProp name="" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">{"title": "Test JMeter Todo","description": "This is a test from JMeter","completed": false,"important": true}</stringProp>
+                <stringProp name="Argument.value">{"id": 0,"title": "Test JMeter Todo","description": "This is a test from JMeter","completed": false,"important": true}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
             </collectionProp>
