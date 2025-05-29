@@ -16,7 +16,14 @@
         <p id="spin-result"></p>
     </div>
 
+    <!-- 중요 필터 버튼 추가 -->
+    <div>
+        <button id="filter-important">✨ 중요한 할 일만 보기</button>
+        <button id="show-all">📋 전체 보기</button>
+    </div>
+
     <ul id="todo-list"></ul>
+
     <form id="todo-form">
         <div class="form-row horizontal-inputs">
             <input type="text" id="title" placeholder="Title" required />
@@ -35,16 +42,20 @@
     <ul id="completed-list"></ul>
 
     <script>
-        // 처음 todo 및 기록 표시
         document.addEventListener("DOMContentLoaded", async () => {
             await fetchTodos();
             renderCompletedTodos();
         });
 
-        // todo 목록 렌더링
+        // 전체 목록 가져오기
         async function fetchTodos() {
             const response = await fetch('/todos');
             const todos = await response.json();
+            renderTodoList(todos);
+        }
+
+        // 할 일 목록 렌더링
+        function renderTodoList(todos) {
             const todoList = document.getElementById('todo-list');
             todoList.innerHTML = '';
             todos.forEach(todo => {
@@ -68,7 +79,7 @@
             });
         }
 
-        // todo 추가
+        // 투두 추가
         document.getElementById('todo-form').addEventListener('submit', async (event) => {
             event.preventDefault();
             const title = document.getElementById('title').value;
@@ -97,7 +108,7 @@
             }
         });
 
-        // todo 삭제 및 완료 처리
+        // 투두 삭제
         async function deleteTodo(id) {
             const todoItem = await getTodoById(id);
             if (todoItem) saveCompletedTodo(todoItem);
@@ -112,14 +123,14 @@
             }
         }
 
-        // 특정 todo 가져오기
+        // ID로 특정 투두 가져오기
         async function getTodoById(id) {
             const response = await fetch('/todos');
             const todos = await response.json();
             return todos.find(todo => todo.id === id);
         }
 
-        // 완료한 todo를 localStorage에 저장
+        // 완료 항목 localStorage 저장
         function saveCompletedTodo(todo) {
             let history = JSON.parse(localStorage.getItem('completedTodos')) || [];
             history.push({
@@ -129,7 +140,7 @@
             localStorage.setItem('completedTodos', JSON.stringify(history));
         }
 
-        // 완료한 todo 렌더링
+        // 완료 목록 렌더링
         function renderCompletedTodos() {
             const completedList = document.getElementById('completed-list');
             completedList.innerHTML = '';
@@ -143,7 +154,18 @@
             });
         }
 
-        // 룰렛 기능
+        // ✨ 중요 투두만 보기
+        document.getElementById('filter-important').addEventListener('click', async () => {
+            const response = await fetch('/todos');
+            const todos = await response.json();
+            const importantTodos = todos.filter(todo => todo.important);
+            renderTodoList(importantTodos);
+        });
+
+        // 📋 전체 보기
+        document.getElementById('show-all').addEventListener('click', fetchTodos);
+
+        // 🎡 룰렛 기능
         const rouletteItems = ['밥 먹기', '운동하기', '책 읽기', '영화 보기', '잠자기'];
         document.getElementById('spin-button').addEventListener('click', () => {
             const randomIndex = Math.floor(Math.random() * rouletteItems.length);
