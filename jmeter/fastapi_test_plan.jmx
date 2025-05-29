@@ -21,8 +21,8 @@
         <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
           <collectionProp name="Arguments.arguments"/>
         </elementProp>
-        <stringProp name="HTTPSampler.domain">${__BeanShell(${BASE_URL}.split("://")[1].split(":")[0])}</stringProp>
-        <stringProp name="HTTPSampler.port">${__BeanShell(${BASE_URL}.split(":")[2])}</stringProp>
+        <stringProp name="HTTPSampler.domain">${__P(DOMAIN,localhost)}</stringProp>
+        <stringProp name="HTTPSampler.port">${__P(PORT,8000)}</stringProp>
         <stringProp name="HTTPSampler.protocol">http</stringProp>
         <stringProp name="HTTPSampler.path"></stringProp>
         <stringProp name="HTTPSampler.contentEncoding"></stringProp>
