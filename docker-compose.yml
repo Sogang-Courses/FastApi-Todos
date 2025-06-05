@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile      # Dockerfile 이름 (생략 가능, 기본값은 'Dockerfile')
     container_name: FastApi-app
     ports:
-      - "8000:8000"
+      - "5001:5001"
     depends_on:
       - loki
     environment:
