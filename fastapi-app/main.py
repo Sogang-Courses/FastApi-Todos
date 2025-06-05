@@ -10,15 +10,10 @@ from prometheus_fastapi_instrumentator import Instrumentator
 
 app = FastAPI()
 
-# ✅ 여기 추가 (로그 미들웨어 등록)
-app.middleware("http")(log_requests)
-
-# Prometheus 메트릭스 엔드포인트 (/metrics)
-Instrumentator().instrument(app).expose(app, endpoint="/metrics")
 # Prometheus 메트릭스 엔드포인트 (/metrics)
 Instrumentator().instrument(app).expose(app, endpoint="/metrics")
 
-#loki 관련 코드
+#loki 관련 코드s
 loki_logs_handler = LokiQueueHandler(
     Queue(-1),
     url=getenv("LOKI_ENDPOINT"),
@@ -47,6 +42,8 @@ async def log_requests(request: Request, call_next):
         custom_logger.info(log_message)
 
     return response
+
+app.middleware("http")(log_requests)
 
 # 폰트적용을 위한 정적 파일
 if os.path.isdir("static"):
