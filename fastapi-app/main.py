@@ -10,6 +10,11 @@ from prometheus_fastapi_instrumentator import Instrumentator
 
 app = FastAPI()
 
+# ✅ 여기 추가 (로그 미들웨어 등록)
+app.middleware("http")(log_requests)
+
+# Prometheus 메트릭스 엔드포인트 (/metrics)
+Instrumentator().instrument(app).expose(app, endpoint="/metrics")
 # Prometheus 메트릭스 엔드포인트 (/metrics)
 Instrumentator().instrument(app).expose(app, endpoint="/metrics")
 
