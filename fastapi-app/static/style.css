@@ -89,3 +89,18 @@
     border-radius: 5px;
     cursor: pointer;
 }
+
+.main-container {
+  display: flex;
+  gap: 40px;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.todo-section, .completed-section {
+  flex: 1;
+  padding: 20px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}

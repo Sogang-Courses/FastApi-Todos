@@ -11,46 +11,7 @@ from multiprocessing import Queue
 from os import getenv
 from fastapi import Request
 
-from prometheus_fastapi_instrumentator import Instrumentator
-
-from logging_loki import LokiQueueHandler
-
 app = FastAPI()
-
-# Prometheus 메트릭스 엔드포인트 (/metrics)
-Instrumentator().instrument(app).expose(app, endpoint="/metrics")
-
-#loki 관련 코드
-loki_logs_handler = LokiQueueHandler(
-    Queue(-1),
-    url=getenv("LOKI_ENDPOINT"),
-    tags={"application": "fastapi"},
-    version="1",
-)
-
-# Custom access logger (ignore Uvicorn's default logging)
-custom_logger = logging.getLogger("custom.access")
-custom_logger.setLevel(logging.INFO)
-
-# Add Loki handler (assuming `loki_logs_handler` is correctly configured)
-custom_logger.addHandler(loki_logs_handler)
-
-async def log_requests(request: Request, call_next):
-    start_time = time.time()
-    response = await call_next(request)
-    duration = time.time() - start_time  # Compute response time
-
-    log_message = (
-        f'{request.client.host} - "{request.method} {request.url.path} HTTP/1.1" {response.status_code} {duration:.3f}s'
-    )
-
-    # **Only log if duration exists**
-    if duration:
-        custom_logger.info(log_message)
-
-    return response
-
-app.middleware("http")(log_requests)
 
 # 폰트적용을 위한 정적 파일
 if os.path.isdir("static"):
@@ -63,6 +24,8 @@ class TodoItem(BaseModel):
     description: str
     completed: bool
     important: bool
+    month: int
+    day: int
 
 # JSON 파일 경로
 TODO_FILE = "todo.json"
@@ -92,11 +55,11 @@ def create_todo(todo: TodoItem):
     # 새로운 id 1부터 할당
     next_id = max([t["id"] for t in todos], default=0) + 1
     new_todo = todo.model_dump()
-    new_todo["id"] = next_id 
+    new_todo["id"] = next_id
 
     todos.append(new_todo)
     save_todos(todos)
-    return todo
+    return TodoItem(**new_todo)
 
 # PUT /todos/{id}
 @app.put("/todos/{todo_id}", response_model=TodoItem)
@@ -104,12 +67,14 @@ def update_todo(todo_id: int, updated_todo: TodoItem):
     todos = load_todos()
     for i, todo in enumerate(todos):
         if todo["id"] == todo_id:
-            todos[i] = updated_todo.model_dump()
+            updated = updated_todo.model_dump()
+            updated["id"] = todo_id  # id 보존
+            todos[i] = updated
             save_todos(todos)
-            return updated_todo
+            return TodoItem(**updated)
     raise HTTPException(status_code=404, detail="To-Do not found")
 
-# DELETE /todos/{id}
+# DELETE /todos/{todo_id}
 @app.delete("/todos/{todo_id}")
 def delete_todo(todo_id: int):
     todos = load_todos()
@@ -127,5 +92,3 @@ def read_root():
     with open("templates/index.html", "r") as file:
         content = file.read()
     return HTMLResponse(content=content)
-
-    

@@ -1,30 +1,20 @@
 [
     {
         "id": 1,
-        "title": "\uacfc\uc81c",
-        "description": "SW 5\uc8fc\ucc28",
+        "title": "hi",
+        "description": "hi",
         "completed": false,
-        "important": true
+        "important": false,
+        "month": 6,
+        "day": 5
     },
     {
         "id": 2,
-        "title": "\uacfc\uc81c ",
-        "description": "SP pr#3",
+        "title": "hi",
+        "description": "hi",
         "completed": false,
-        "important": true
-    },
-    {
-        "id": 3,
-        "title": "\uc9d1\uc548\uc77c",
-        "description": "\uc124\uac70\uc9c0",
-        "completed": false,
-        "important": false
-    },
-    {
-        "id": 4,
-        "title": "\uc9d1\uc548\uc77c",
-        "description": "\ube68\ub798",
-        "completed": false,
-        "important": false
+        "important": false,
+        "month": 5,
+        "day": 4
     }
 ]

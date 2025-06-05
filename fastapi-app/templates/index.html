@@ -18,8 +18,9 @@
 
     <!-- 중요 필터 버튼 추가 -->
     <div>
-        <button id="filter-important">✨ 중요한 할 일만 보기</button>
-        <button id="show-all">📋 전체 보기</button>
+        <button id="show-all">TOTAL</button>
+        <button id="filter-today">TODAY</button>
+        <button id="filter-important">IMPORTANT</button>
     </div>
 
     <ul id="todo-list"></ul>
@@ -28,6 +29,8 @@
         <div class="form-row horizontal-inputs">
             <input type="text" id="title" placeholder="Title" required />
             <input type="text" id="description" placeholder="Description" required />
+            <input type="number" id="month" placeholder="Month" required />
+            <input type="number" id="day" placeholder="Day" required />
             <label>
                 <input type="checkbox" id="important" />
                 Important
@@ -39,7 +42,7 @@
     </form>
 
     <h2>✅ 완료한 기록</h2>
-    <ul id="completed-list"></ul>
+    <ul id="completed-list" style="list-style-type: none; padding-left: 0;"></ul>
 
     <script>
         document.addEventListener("DOMContentLoaded", async () => {
@@ -61,7 +64,7 @@
             todos.forEach(todo => {
                 const li = document.createElement('li');
                 const isImportant = todo.important ? '✨ ' : '';
-                li.textContent = `${isImportant}${todo.id}번째: ${todo.title} - ${todo.description} ${isImportant}`;
+                li.textContent = `${isImportant} ${todo.title} - ${todo.description} ${isImportant}\n 마감기한: ${todo.month}. ${todo.day}`;
 
                 const completeButton = document.createElement('button');
                 completeButton.textContent = '✓';
@@ -85,6 +88,8 @@
             const title = document.getElementById('title').value;
             const description = document.getElementById('description').value;
             const important = document.getElementById('important').checked;
+            const month = document.getElementById('month').value;
+            const day = document.getElementById('day').value;
 
             const response = await fetch('/todos', {
                 method: 'POST',
@@ -96,7 +101,9 @@
                     title,
                     description,
                     completed: false,
-                    important
+                    important,
+                    month,
+                    day
                 })
             });
 
@@ -105,6 +112,8 @@
                 document.getElementById('title').value = '';
                 document.getElementById('description').value = '';
                 document.getElementById('important').checked = false;
+                document.getElementById('month').value = 0;
+                document.getElementById('day').value = 0;
             }
         });
 
@@ -171,6 +180,18 @@
             const randomIndex = Math.floor(Math.random() * rouletteItems.length);
             const result = rouletteItems[randomIndex];
             document.getElementById('spin-result').textContent = `🎉 오늘의 추천: ${result}!`;
+        });
+
+        // 👀 오늘! 기능
+        document.getElementById('filter-today').addEventListener('click', async () => {
+            const today = new Date();
+            const month = today.getMonth() + 1;
+            const day = today.getDate();
+
+            const response = await fetch('/todos');
+            const todos = await response.json();
+            const todayTodos = todos.filter(todo => todo.month === month && todo.day === day);
+            renderTodoList(todayTodos);
         });
     </script>
 </body>
