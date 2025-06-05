@@ -20,7 +20,7 @@ app = FastAPI()
 # Prometheus 메트릭스 엔드포인트 (/metrics)
 Instrumentator().instrument(app).expose(app, endpoint="/metrics")
 
-#loki 관련 코드s
+#loki 관련 코드
 loki_logs_handler = LokiQueueHandler(
     Queue(-1),
     url=getenv("LOKI_ENDPOINT"),
