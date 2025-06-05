@@ -8,8 +8,10 @@ services:
     container_name: FastApi-app
     ports:
       - "5001:5001"
-    networks:
-      - loadtest-net
+    depends_on:
+      - loki
+    environment:
+      - LOKI_ENDPOINT=http://loki:3100/loki/api/v1/push
   
   # 6주차 과제
   sonarqube:
@@ -99,6 +101,12 @@ services:
     command: influxd -config /etc/influxdb/influxdb.conf
     networks:
       - loadtest-net
+
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    ports:
+      - "3100:3100" 
 
 networks:
   loadtest-net:
