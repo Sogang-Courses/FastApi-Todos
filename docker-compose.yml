@@ -26,8 +26,6 @@ services:
       - sonarqube_data:/opt/sonarqube/data
       - sonarqube_logs:/opt/sonarqube/logs
       - sonarqube_extensions:/opt/sonarqube/extensions
-    networks:
-      - loadtest-net
 
   # 7주차 과제
   prometheus:
@@ -39,8 +37,6 @@ services:
         - "9090:9090"
       command:
         - "--config.file=/etc/prometheus/prometheus.yml"
-      networks:
-      - loadtest-net
 
   grafana:
       image: grafana/grafana:latest
@@ -51,66 +47,19 @@ services:
         - GF_SECURITY_ADMIN_PASSWORD=admin  # 기본 Grafana 로그인 비밀번호
       volumes:
         - grafana-data:/var/lib/grafana
-      networks:
-      - loadtest-net
 
   node-exporter:
       image: prom/node-exporter:latest
       container_name: node-exporter
       ports:
         - "9100:9100"
-      networks:
-      - loadtest-net
 
-  # 12주차 과제
-  jmeter:
-    build:
-      context: ./jmeter
-      dockerfile: Dockerfile
-    container_name: jmeter
-    volumes:
-      - ./jmeter:/jmeter
-    command:
-      - jmeter
-      - -n
-      - -t
-      - /jmeter/fastapi_test_plan.jmx
-      - -l
-      - /jmeter/results.jtl
-      - -JBASE_URL=http://fastapi-app:5001
-      - -Jjmeter.save.saveservice.output_format=csv
-      - -e
-      - -o
-      - /jmeter/report
-    networks:
-      - loadtest-net
-  
-  influxdb:
-    image: influxdb:1.8
-    container_name: influxdb
-    ports:
-      - "8086:8086"
-      - "2003:2003"
-    environment:
-      - INFLUXDB_DB=jmeter
-      - INFLUXDB_ADMIN_USER=admin
-      - INFLUXDB_ADMIN_PASSWORD=admin123
-    volumes:
-      - influxdb_data:/var/lib/influxdb
-      - ./influxdb.conf:/etc/influxdb/influxdb.conf:ro
-    command: influxd -config /etc/influxdb/influxdb.conf
-    networks:
-      - loadtest-net
-
+  # 13주차 과제 
   loki:
     image: grafana/loki:latest
     container_name: loki
     ports:
       - "3100:3100" 
-
-networks:
-  loadtest-net:
-    driver: bridge
 
 volumes:
   sonarqube_conf:
@@ -118,4 +67,3 @@ volumes:
   sonarqube_logs:
   sonarqube_extensions:
   grafana-data:
-  influxdb_data:
